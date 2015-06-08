@@ -1,0 +1,2 @@
+# youdaoScript
+ok
