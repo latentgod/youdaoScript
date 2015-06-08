@@ -1,0 +1,89 @@
+#!/usr/bin/python
+# -*- coding : utf-8 -*-
+
+# *************************************************************************
+# * function:tranlate englist to chinese or tranlate chinese to english   *
+# * use: Youdao web API  (online)                                         *
+# * author : latengod                                                     *
+# * date : 2015-06-08 13:45:12                                            *
+# * require : module termcolor (pip install termcolor)                    *
+# *************************************************************************
+
+import urllib
+import json
+import sys
+# The development environment hasn't module termcolor
+try:
+    from termcolor import colored
+except ImportError:
+    print '[Error:] Please install module termcolor (example: pip install \
+termcolor)'
+    sys.exit(0)
+
+# set encode = utf-8 and don't know why the above isn't effective
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
+
+# translate
+def translate():
+    n = 'n. '
+    adv = 'adv. '
+    adj = 'adj. '
+# connect arge to translate
+    try:
+        word = ''
+        for i in sys.argv:
+            if sys.argv[0] == i:
+                continue
+            word = word + i
+    except IndexError:
+        printUsage()
+    if word == "-h" or word == "-H" or word == "--help" or word == "--HELP":
+        printUsage()
+
+    if not chinese(word):
+        n = ''
+        adv = ''
+        adj = ''
+    try:
+        youdao = urllib.urlopen("http://fanyi.youdao.com/openapi.do?keyfrom=ti\
+nxing&key=1312427901&type=data&doctype=json&version=1.1&q=" + word)
+    except IOError:
+        print colored("[Error:] Connected to the Internet before using the \
+program",'red')
+        return
+    translate_respone = json.load(youdao)
+    print "--------++ "+colored(word, 'yellow')+" ++-----------"
+    print colored(translate_respone['translation'][0], 'cyan')
+    try:
+        print colored('/' + translate_respone['basic']['phonetic'] + '/', 'cya\
+n')
+    except KeyError:
+        pass
+    try:
+        print colored(n + translate_respone['basic']['explains'][0], 'cyan')
+        print colored(adj + translate_respone['basic']['explains'][1], 'cyan')
+        print colored(adv + translate_respone['basic']['explains'][2], 'cyan')
+    except IndexError:
+        pass
+    except KeyError:
+        pass
+
+
+# judge chinese
+def chinese(word):
+    if word >= u'\u4e00' and word <= u'\u9fa5':
+        return True
+    else:
+        return False
+
+# print usage
+def printUsage():
+        print '----------------------------------------------------------------'
+        print 'Usage: trans arg      The arg what you need to be translated'
+        sys.exit(0)
+
+
+if __name__ == '__main__':
+    translate()
