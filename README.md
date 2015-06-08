@@ -1,6 +1,6 @@
 # youdaoScript
 
-这是一个基于有道web API 的 翻译脚本
+这是一个基于有道web API 的 翻译python脚本
 
 
 使用：
