@@ -36,7 +36,7 @@ def translate():
         for i in sys.argv:
             if sys.argv[0] == i:
                 continue
-            word = word + i
+            word = word + ' ' + i
     except IndexError:
         printUsage()
     if word == "-h" or word == "-H" or word == "--help" or word == "--HELP":
